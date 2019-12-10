@@ -56,6 +56,16 @@ var oauthApi = new OAuth('appid', 'secret', async function (openid) {
   // 持久化时请注意，每个openid都对应一个唯一的token!
   await writeFile(openid + ':access_token.txt', JSON.stringify(token));
 });
+
+// 全局保存到MongoDB
+var oauth = new OAuth('appid','secret',
+  async (appid)=>{ //获取对应的全局 token 的方法
+    return await ClientToken.getToken(appid) //ClientToken 是一个存储token的Sechem
+  },
+  async (appid,token) => {
+    return await ClientToken.setToken(appid,token);
+  }
+)
 ```
 
 ### 引导用户
